@@ -1,136 +1,16 @@
-import 'package:bubble_bottom_bar/bubble_bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:hackcorona/utils/colors.dart';
-import 'package:hackcorona/utils/logger.dart';
 import 'package:hackcorona/widgets/common/cards.dart';
 import 'package:hackcorona/widgets/common/expanded_text.dart';
-import 'package:line_icons/line_icons.dart';
 
 class HomeScreen extends StatefulWidget {
-  static final String TAG = "HOME";
-
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int currentIndex;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    currentIndex = 0;
-  }
-
-  void changePage(int index) {
-    setState(() {
-      currentIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    Log.log(HomeScreen.TAG, message: "Home Page is Initialized");
-    return Scaffold(
-//        appBar: AppBar(
-//          backgroundColor: AppColors.background,
-//          elevation: 0.0,
-//        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {},
-          child: Icon(
-            LineIcons.envelope,
-            color: AppColors.primary,
-          ),
-          backgroundColor: Colors.white,
-          elevation: 4,
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        bottomNavigationBar: _buildBottomNavBar(),
-        body: _buildBody());
-  }
-  
-  _buildBottomNavBar() {
-    return BubbleBottomBar(
-      hasNotch: true,
-      fabLocation: BubbleBottomBarFabLocation.end,
-      opacity: 1,
-      currentIndex: currentIndex,
-      onTap: changePage,
-      borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      elevation: 8,
-      iconSize: 22,
-      items: <BubbleBottomBarItem>[
-        BubbleBottomBarItem(
-          backgroundColor: AppColors.primary,
-          icon: Icon(
-            LineIcons.home,
-            color: AppColors.primary,
-          ),
-          activeIcon: Icon(
-            LineIcons.home,
-            color: Colors.white,
-          ),
-          title: Text(
-            "Home",
-            style: TextStyle(color: AppColors.white),
-          ),
-        ),
-        BubbleBottomBarItem(
-          backgroundColor: AppColors.primary,
-          icon: Icon(
-            LineIcons.newspaper_o,
-            color: AppColors.primary,
-          ),
-          activeIcon: Icon(
-            LineIcons.newspaper_o,
-            color: Colors.white,
-          ),
-          title: Text(
-            "News",
-            style: TextStyle(color: AppColors.white),
-          ),
-        ),
-  
-        BubbleBottomBarItem(
-          backgroundColor: AppColors.primary,
-          icon: Icon(
-            LineIcons.bell,
-            color: AppColors.primary,
-          ),
-          activeIcon: Icon(
-            LineIcons.bell,
-            color: Colors.white,
-          ),
-          title: Text(
-            "Annonce..",
-            style: TextStyle(color: AppColors.white, fontSize: 10),
-          ),
-        ),
-  
-        BubbleBottomBarItem(
-          backgroundColor: AppColors.primary,
-          icon: Icon(
-            LineIcons.hand_pointer_o,
-            color: AppColors.primary,
-          ),
-          activeIcon: Icon(
-            LineIcons.hand_pointer_o,
-            color: Colors.white,
-          ),
-          title: Text(
-            "Volunteer",
-            style: TextStyle(color: AppColors.white, fontSize: 10),
-          ),
-        ),
-
-      ],
-    );
-  }
-
-  _buildBody() {
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -152,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
-  } //_buildBody()
+  }
 
   _buildStatus() {
     return Container(
