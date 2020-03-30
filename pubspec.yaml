@@ -20,9 +20,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.2
+  fluttertoast: ^4.0.1
   provider: ^4.0.0
   cached_network_image: ^2.0.0-rc
   logger: ^0.8.3
@@ -30,17 +28,19 @@ dependencies:
   line_icons: ^0.2.0
   bubble_bottom_bar: ^1.2.0
 
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^0.1.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -63,15 +63,15 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-     - family: Poppins
-       fonts:
-         - asset: assets/fonts/Poppins-Regular.otf
-         - asset: assets/fonts/Poppins-Bold.otf
-           weight: 700
-         - asset: assets/fonts/Poppins-SemiBold.otf
-           weight: 300
-         - asset: assets/fonts/Poppins-Light.otf
-           weight: 100
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.otf
+        - asset: assets/fonts/Poppins-Bold.otf
+          weight: 700
+        - asset: assets/fonts/Poppins-SemiBold.otf
+          weight: 300
+        - asset: assets/fonts/Poppins-Light.otf
+          weight: 100
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
