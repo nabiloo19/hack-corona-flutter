@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hackcorona/models/status.dart';
+import 'package:hackcorona/services/firestore_service.dart';
 import 'package:hackcorona/utils/colors.dart';
 import 'package:hackcorona/widgets/common/cards.dart';
 import 'package:hackcorona/widgets/common/expanded_text.dart';
@@ -9,6 +11,24 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<Status> _globalStatusList = [];
+  FirestoreService _service;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _service = FirestoreService(); //TODO: Provide this service with Provider
+    _populateStatus();
+  }
+
+  _populateStatus() async {
+    List<Status> statusList = await _service.getGlobalStatus();
+    setState(() {
+      _globalStatusList = statusList;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -36,23 +56,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildStatus() {
     return Container(
-      color: AppColors.background,
-      margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
-      height: 140.0,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: <Widget>[
-          StatusCard(
-            label: 'Cases',
-            value: '768,084',
-          ),
-          StatusCard(
-            label: 'Cases',
-            value: '768,084',
-          ),
-        ],
-      ),
-    );
+        color: AppColors.background,
+        margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
+        height: 140.0,
+        child: StreamBuilder(
+          stream: _service.getGlobalStatusStream(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    Status stat = new Status.fromDoc(snapshot.data.documents[index]);
+                    return StatusCard(
+                      label: stat.label,
+                      value: stat.value,
+                    );
+                  });
+            } else {
+              return SizedBox.shrink();
+            }
+          },
+        )
+
+//
+        );
   } // _buildStatus()
 
   _buildIntroduction() {
