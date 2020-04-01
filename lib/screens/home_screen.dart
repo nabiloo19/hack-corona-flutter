@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hackcorona/models/status.dart';
+import 'package:hackcorona/services/database_service.dart';
 import 'package:hackcorona/services/firestore_service.dart';
 import 'package:hackcorona/utils/colors.dart';
 import 'package:hackcorona/widgets/common/cards.dart';
@@ -11,23 +12,15 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  List<Status> _globalStatusList = [];
-  FirestoreService _service;
+  DatabaseService _service;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _service = FirestoreService(); //TODO: Provide this service with Provider
-    _populateStatus();
+    _service = DatabaseService(); //TODO: Provide this service with Provider
   }
 
-  _populateStatus() async {
-    List<Status> statusList = await _service.getGlobalStatus();
-    setState(() {
-      _globalStatusList = statusList;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,32 +48,31 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _buildStatus() {
-    return Container(
-        color: AppColors.background,
-        margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
-        height: 140.0,
-        child: StreamBuilder(
-          stream: _service.getGlobalStatusStream(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    Status stat = new Status.fromDoc(snapshot.data.documents[index]);
-                    return StatusCard(
-                      label: stat.label,
-                      value: stat.value,
-                    );
-                  });
-            } else {
-              return SizedBox.shrink();
-            }
-          },
-        )
-
-//
-        );
+    return StreamBuilder(
+      stream: _service.globalSummaryStatusStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          return Container(
+            color: AppColors.background,
+            margin: EdgeInsets.symmetric(vertical: 20.0, horizontal: 5.0),
+            height: 140.0,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  Status stat = snapshot.data[index];
+                  return StatusCard(
+                    label: stat.label,
+                    value: stat.value,
+                  );
+                }),
+          );
+        } else {
+          //TODO: Show Shimmer of Cards
+          return SizedBox.shrink();
+        }
+      },
+    );
   } // _buildStatus()
 
   _buildIntroduction() {
