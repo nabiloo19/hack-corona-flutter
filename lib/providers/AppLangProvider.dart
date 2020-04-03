@@ -10,6 +10,11 @@ class AppLangProvider extends ChangeNotifier {
   
   /// Get Current Locale
   Locale get appLocale => _appLocale ?? Locale('en');
+  
+  String get currentLangName  {
+    if(appLocale.languageCode == 'en') return "English";
+    else return "Amharic";
+  }
 
   /// This method is called during the application first run
   fetchLocale()  async {
