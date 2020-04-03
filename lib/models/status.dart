@@ -11,12 +11,11 @@ class Status {
     if (data == null) {
       return null;
     }
-    final String label = data['label'];
-    if (label == null) {
-      return null;
-    }
-    final String value = data['value'];
-    return Status(id: documentId, label: label, value: value);
+    return Status(
+      id: documentId,
+      label: data['label'],
+      value: data['value'],
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -25,17 +24,11 @@ class Status {
       'value': value,
     };
   }
-  
+
   factory Status.fromDoc(DocumentSnapshot doc) {
-    return Status(
-      id: doc.documentID,
-      label: doc['label'],
-      value: doc['value']
-    );
+    return Status(id: doc.documentID, label: doc['label'], value: doc['value']);
   }
 
   @override
   String toString() => 'label: $label, value: $value';
-  
-  
 }

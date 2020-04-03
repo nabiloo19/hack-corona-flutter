@@ -88,7 +88,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           title: Text(
             "Home",
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.white,fontSize: 12),
           ),
         ),
         BubbleBottomBarItem(
@@ -103,7 +103,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           title: Text(
             "News",
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.white,fontSize: 12),
           ),
         ),
         BubbleBottomBarItem(
@@ -115,25 +115,11 @@ class _LandingScreenState extends State<LandingScreen> {
           activeIcon: Icon(
             LineIcons.bell,
             color: Colors.white,
+            
           ),
           title: Text(
-            "Announce..",
-            style: TextStyle(color: AppColors.white, fontSize: 10),
-          ),
-        ),
-        BubbleBottomBarItem(
-          backgroundColor: AppColors.primary,
-          icon: Icon(
-            LineIcons.hand_pointer_o,
-            color: AppColors.primary,
-          ),
-          activeIcon: Icon(
-            LineIcons.hand_pointer_o,
-            color: Colors.white,
-          ),
-          title: Text(
-            "Volunteer",
-            style: TextStyle(color: AppColors.white, fontSize: 10),
+            "Notification",
+            style: TextStyle(color: AppColors.white, fontSize: 12),
           ),
         ),
       ],

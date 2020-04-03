@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hackcorona/models/corona_info.dart';
 import 'package:hackcorona/models/status.dart';
 import 'package:hackcorona/providers/AppLangProvider.dart';
 import 'package:hackcorona/services/database_service.dart';
@@ -12,13 +13,14 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static final String TAG = "HomeScreen";
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseService _service;
-  
+
   @override
   void initState() {
     // TODO: implement initState
@@ -26,30 +28,30 @@ class _HomeScreenState extends State<HomeScreen> {
     _service = DatabaseService(); //TODO: Provide this service with Provider
   }
 
-
   @override
   Widget build(BuildContext context) {
-    
-    
     return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _buildStatus(),
-          SizedBox(
-            height: 20,
-          ),
-          _buildIntroduction(),
-          SizedBox(
-            height: 20,
-          ),
-          _buildSymptoms(),
-          SizedBox(
-            height: 20,
-          ),
-          _buildPreventation()
-        ],
+      child: Padding(
+        padding: const EdgeInsets.only(bottom:50.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            _buildStatus(),
+            SizedBox(
+              height: 20,
+            ),
+            _buildIntroduction(),
+            SizedBox(
+              height: 20,
+            ),
+            _buildSymptoms(),
+            SizedBox(
+              height: 20,
+            ),
+            _buildPrevention()
+          ],
+        ),
       ),
     );
   }
@@ -98,57 +100,91 @@ class _HomeScreenState extends State<HomeScreen> {
               height: 20.0,
             ),
             CustomExpandedText(
-              text:'about_corona',
+              text: AppLocalizations.of(context).translate('about_corona'),
             ),
-            SizedBox(
-              height: 20.0,
-            ),
-            MaterialButton(onPressed: () {
-              Provider.of<AppLangProvider>(context, listen: false).changeLanguage(Locale('en'));
-            },child: Text('English'),),
-            SizedBox(
-              height: 10.0,
-            ),
-            MaterialButton(onPressed: () {
-              Provider.of<AppLangProvider>(context, listen: false).changeLanguage(Locale('am'));
-            },child: Text('Amharic'),)
           ],
         ),
       ),
     );
   }
-
   _buildSymptoms() {
+    List<GridTile> tiles = [];
+    symptoms.forEach(
+          (prev) => tiles.add(
+        GridTile(
+          child: SymptomCard(
+            onCardClick: () => {},
+            caption: prev.caption,
+            image: prev.image,
+            title: prev.title,
+          ),
+        ),
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text(
-            "Symptoms",
+            AppLocalizations.of(context).translate('Symptoms'),
             style: TextStyle(
                 color: AppColors.primary,
                 fontSize: 20,
                 fontWeight: FontWeight.w400),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          GridView.count(
+              crossAxisCount: 2,
+              childAspectRatio: 1.0,
+              mainAxisSpacing: 1.0,
+              crossAxisSpacing: 1.0,
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              children: tiles),
+        ],
+      ),
+    );
+  }
+  _buildPrevention() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            AppLocalizations.of(context).translate('Prevention'),
+            style: TextStyle(
+                color: AppColors.primary,
+                fontSize: 20,
+                fontWeight: FontWeight.w400),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 350.0,
+            child: ListView.builder(
+                itemCount: prevents.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (BuildContext context, int index) {
+                  CoronaInfo prevent = prevents[index];
+
+                  if (prevent == null) return SizedBox.shrink();
+                  return PreventionCard(
+                    onCardClick: () => {},
+                    title: prevent.title,
+                    image: prevent.image,
+                    caption: prevent.caption,
+                  );
+                }),
           )
         ],
       ),
     );
   }
 
-  _buildPreventation() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        children: <Widget>[
-          Text(
-            "Preventation",
-            style: TextStyle(
-                color: AppColors.primary,
-                fontSize: 20,
-                fontWeight: FontWeight.w400),
-          )
-        ],
-      ),
-    );
-  }
+  
 }
