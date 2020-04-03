@@ -20,19 +20,30 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseService _service;
+  List<CoronaInfo> _symptoms = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _service = DatabaseService(); //TODO: Provide this service with Provider
+
+//    _loadSymptoms();
+  }
+
+  ///Load Symptoms
+  _loadSymptoms() async {
+    List<CoronaInfo> symptoms = await _service.getSymptoms();
+    setState(() {
+      _symptoms = symptoms;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.only(bottom:50.0),
+        padding: const EdgeInsets.only(bottom: 50.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -107,20 +118,9 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
   _buildSymptoms() {
     List<GridTile> tiles = [];
-    symptoms.forEach(
-          (prev) => tiles.add(
-        GridTile(
-          child: SymptomCard(
-            onCardClick: () => {},
-            caption: prev.caption,
-            image: prev.image,
-            title: prev.title,
-          ),
-        ),
-      ),
-    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -136,18 +136,57 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 20,
           ),
-          GridView.count(
-              crossAxisCount: 2,
-              childAspectRatio: 1.0,
-              mainAxisSpacing: 1.0,
-              crossAxisSpacing: 1.0,
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              children: tiles),
+          FutureBuilder(
+            future: _service.getSymptoms(),
+            initialData: symptoms,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) {
+                Log.log(HomeScreen.TAG, message: "No Symptoms Data");
+                return SizedBox.shrink();
+              }
+
+              
+              if (snapshot.data.length == 0) {
+                Log.log(HomeScreen.TAG, message: "Empty Data");
+                return Center(
+                  child: Text('No users have found! Please try again.'),
+                );
+              }
+              
+              Log.log(HomeScreen.TAG, message: "Get Data: ${snapshot.data.length}");
+              var symptoms = snapshot.data;
+              print(symptoms[0].title);
+
+              //Add to Tile
+              symptoms.forEach(
+                (symptom) => tiles.add(
+                  GridTile(
+                    child: SymptomCard(
+                      onCardClick: () => {},
+                      caption: symptom.caption,
+                      image: symptom.image,
+                      title: symptom.title,
+                    ),
+                  ),
+                ),
+              );
+
+              return GridView.count(
+                crossAxisCount: 2,
+                childAspectRatio: 1.0,
+                mainAxisSpacing: 1.0,
+                crossAxisSpacing: 1.0,
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                children: tiles,
+              );
+            },
+          )
         ],
       ),
     );
   }
+
   _buildPrevention() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -185,6 +224,4 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-
-  
 }

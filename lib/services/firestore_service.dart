@@ -1,13 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hackcorona/constants/firestore_refs.dart';
-import 'package:hackcorona/models/status.dart';
 import 'package:meta/meta.dart';
 
 class FirestoreService {
-  
   FirestoreService._();
+
   static final instance = FirestoreService._();
-  
+
   Future<void> setData({
     @required String path,
     @required Map<String, dynamic> data,
@@ -17,13 +15,37 @@ class FirestoreService {
     print('$path: $data');
     await reference.setData(data, merge: merge);
   }
-  
+
   Future<void> deleteData({@required String path}) async {
     final reference = Firestore.instance.document(path);
     print('delete: $path');
     await reference.delete();
   }
+
+  Future<List<T>> getCollectionData<T>({
+    @required String path,
+    @required T builder(Map<String, dynamic> data, String documentID),
+    Query queryBuilder(Query query),
+    int sort(T lhs, T rhs),
+  }) async {
+    Query query = Firestore.instance.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
+    QuerySnapshot snapshots = await query.getDocuments();
+   
+      final result = snapshots.documents
+          .map((snapshot) => builder(snapshot.data, snapshot.documentID))
+          .where((value) => value != null)
+          .toList();
+      if (sort != null) {
+        result.sort(sort);
+      }
+      return result;
   
+    
+  }
+
   Stream<List<T>> collectionStream<T>({
     @required String path,
     @required T builder(Map<String, dynamic> data, String documentID),
@@ -46,7 +68,7 @@ class FirestoreService {
       return result;
     });
   }
-  
+
   Stream<T> documentStream<T>({
     @required String path,
     @required T builder(Map<String, dynamic> data, String documentID),
@@ -56,5 +78,4 @@ class FirestoreService {
     return snapshots
         .map((snapshot) => builder(snapshot.data, snapshot.documentID));
   }
-  
 }
