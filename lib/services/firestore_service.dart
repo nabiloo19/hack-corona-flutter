@@ -33,17 +33,29 @@ class FirestoreService {
       query = queryBuilder(query);
     }
     QuerySnapshot snapshots = await query.getDocuments();
-   
-      final result = snapshots.documents
-          .map((snapshot) => builder(snapshot.data, snapshot.documentID))
-          .where((value) => value != null)
-          .toList();
-      if (sort != null) {
-        result.sort(sort);
-      }
-      return result;
+
+    final result = snapshots.documents
+        .map((snapshot) => builder(snapshot.data, snapshot.documentID))
+        .where((value) => value != null)
+        .toList();
+    if (sort != null) {
+      result.sort(sort);
+    }
+    return result;
+  }
+
+  Future<QuerySnapshot> getQuerySnap({
+    @required String path,
+    String documentID,
+    Query queryBuilder(Query query),
+  }) {
   
+    Query query = Firestore.instance.collection(path);
+    if (queryBuilder != null) {
+      query = queryBuilder(query);
+    }
     
+    return query.getDocuments();
   }
 
   Stream<List<T>> collectionStream<T>({

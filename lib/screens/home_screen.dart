@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hackcorona/constants/firestore_refs.dart';
 import 'package:hackcorona/models/corona_info.dart';
 import 'package:hackcorona/models/status.dart';
-import 'package:hackcorona/providers/AppLangProvider.dart';
 import 'package:hackcorona/services/database_service.dart';
-import 'package:hackcorona/services/firestore_service.dart';
 import 'package:hackcorona/utils/AppLocalization.dart';
 import 'package:hackcorona/utils/colors.dart';
-import 'package:hackcorona/utils/logger.dart';
 import 'package:hackcorona/widgets/common/cards.dart';
 import 'package:hackcorona/widgets/common/expanded_text.dart';
-import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   static final String TAG = "HomeScreen";
@@ -27,13 +24,12 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO: implement initState
     super.initState();
     _service = DatabaseService(); //TODO: Provide this service with Provider
-
-//    _loadSymptoms();
+    _loadSymptoms();
   }
 
   ///Load Symptoms
   _loadSymptoms() async {
-    List<CoronaInfo> symptoms = await _service.getSymptoms();
+    List<CoronaInfo> symptoms = await _service.getCoronaInfoData(symptomsRef);
     setState(() {
       _symptoms = symptoms;
     });
@@ -121,6 +117,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildSymptoms() {
     List<GridTile> tiles = [];
+    if(_symptoms.length == 0) _symptoms.addAll(symptoms);
+    //Add to Tile
+    _symptoms.forEach(
+          (symptom) =>
+          tiles.add(
+            GridTile(
+              child: SymptomCard(
+                onCardClick: () => {},
+                caption: symptom.caption,
+                image: symptom.image,
+                title: symptom.title,
+              ),
+            ),
+          ),
+    );
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -136,52 +147,62 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 20,
           ),
-          FutureBuilder(
-            future: _service.getSymptoms(),
-            initialData: symptoms,
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                Log.log(HomeScreen.TAG, message: "No Symptoms Data");
-                return SizedBox.shrink();
-              }
+          GridView.count(
+            crossAxisCount: 2,
+            childAspectRatio: 1.0,
+            mainAxisSpacing: 1.0,
+            crossAxisSpacing: 1.0,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            children: tiles,
+          ),
 
-              
-              if (snapshot.data.length == 0) {
-                Log.log(HomeScreen.TAG, message: "Empty Data");
-                return Center(
-                  child: Text('No users have found! Please try again.'),
-                );
-              }
-              
-              Log.log(HomeScreen.TAG, message: "Get Data: ${snapshot.data.length}");
-              var symptoms = snapshot.data;
-              print(symptoms[0].title);
-
-              //Add to Tile
-              symptoms.forEach(
-                (symptom) => tiles.add(
-                  GridTile(
-                    child: SymptomCard(
-                      onCardClick: () => {},
-                      caption: symptom.caption,
-                      image: symptom.image,
-                      title: symptom.title,
-                    ),
-                  ),
-                ),
-              );
-
-              return GridView.count(
-                crossAxisCount: 2,
-                childAspectRatio: 1.0,
-                mainAxisSpacing: 1.0,
-                crossAxisSpacing: 1.0,
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                children: tiles,
-              );
-            },
-          )
+//          FutureBuilder(
+//            future: _service.getCoronaInfoData(symptomsRef),
+//            initialData: symptoms,
+//            builder: (context, snapshot) {
+//              if (!snapshot.hasData) {
+//                Log.log(HomeScreen.TAG, message: "No Symptoms Data");
+//                return SizedBox.shrink();
+//              }
+//
+//
+//              if (snapshot.data.length == 0) {
+//                Log.log(HomeScreen.TAG, message: "Empty Data");
+//                return Center(
+//                  child: Text('No users have found! Please try again.'),
+//                );
+//              }
+//
+//              Log.log(HomeScreen.TAG, message: "Get Data: ${snapshot.data.length}");
+//              var symptoms = snapshot.data;
+//              print(symptoms[0].title);
+//
+//              //Add to Tile
+//              symptoms.forEach(
+//                (symptom) => tiles.add(
+//                  GridTile(
+//                    child: SymptomCard(
+//                      onCardClick: () => {},
+//                      caption: symptom.caption,
+//                      image: symptom.image,
+//                      title: symptom.title,
+//                    ),
+//                  ),
+//                ),
+//              );
+//
+//              return GridView.count(
+//                crossAxisCount: 2,
+//                childAspectRatio: 1.0,
+//                mainAxisSpacing: 1.0,
+//                crossAxisSpacing: 1.0,
+//                shrinkWrap: true,
+//                physics: NeverScrollableScrollPhysics(),
+//                children: tiles,
+//              );
+//            },
+//          )
         ],
       ),
     );

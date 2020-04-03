@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackcorona/constants/firestore_refs.dart';
 import 'package:hackcorona/models/corona_info.dart';
 import 'package:hackcorona/models/status.dart';
@@ -11,8 +12,11 @@ class DatabaseService {
       path: statusRef,
       builder: (data, documentId) => Status.fromMap(data, documentId));
 
-  ///Get Symptoms Data
-  Future<List<CoronaInfo>> getSymptoms() => _service.getCollectionData(
-      path: symptomsRef,
+  ///Get Corona Info Data
+  Future<List<CoronaInfo>> getCoronaInfoData(String ref) => _service.getCollectionData(
+      path: ref,
       builder: (data, documentId) => CoronaInfo.fromMap(data, documentId));
+
+  ///Get Corona Info QuerySnap
+  Future<QuerySnapshot> getCoronaInfoSnap(String ref) => _service.getQuerySnap(path: ref);
 }
