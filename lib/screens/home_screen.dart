@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:hackcorona/models/status.dart';
+import 'package:hackcorona/providers/AppLangProvider.dart';
 import 'package:hackcorona/services/database_service.dart';
 import 'package:hackcorona/services/firestore_service.dart';
+import 'package:hackcorona/utils/AppLocalization.dart';
 import 'package:hackcorona/utils/colors.dart';
+import 'package:hackcorona/utils/logger.dart';
 import 'package:hackcorona/widgets/common/cards.dart';
 import 'package:hackcorona/widgets/common/expanded_text.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
+  static final String TAG = "HomeScreen";
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseService _service;
-
+  
   @override
   void initState() {
     // TODO: implement initState
@@ -24,6 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
+    
     return SingleChildScrollView(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -85,18 +92,26 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('What is COVID-19?',
+            Text(AppLocalizations.of(context).translate("title"),
                 style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.w300)),
             SizedBox(
               height: 20.0,
             ),
             CustomExpandedText(
-              text:
-                  'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsu',
+              text:'about_corona',
             ),
             SizedBox(
-              height: 40.0,
+              height: 20.0,
             ),
+            MaterialButton(onPressed: () {
+              Provider.of<AppLangProvider>(context, listen: false).changeLanguage(Locale('en'));
+            },child: Text('English'),),
+            SizedBox(
+              height: 10.0,
+            ),
+            MaterialButton(onPressed: () {
+              Provider.of<AppLangProvider>(context, listen: false).changeLanguage(Locale('am'));
+            },child: Text('Amharic'),)
           ],
         ),
       ),

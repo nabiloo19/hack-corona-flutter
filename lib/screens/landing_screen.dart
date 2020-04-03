@@ -11,7 +11,7 @@ import 'package:hackcorona/utils/logger.dart';
 import 'package:line_icons/line_icons.dart';
 
 class LandingScreen extends StatefulWidget {
-  static const String TAG = "HOME";
+  static const String TAG = "LANDING_SCREEN";
 
   @override
   _LandingScreenState createState() => _LandingScreenState();
@@ -41,7 +41,6 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Log.log(LandingScreen.TAG, message: "Home Page is Initialized");
     return Scaffold(
       // appBar: AppBar(
       //   backgroundColor: AppColors.background,
