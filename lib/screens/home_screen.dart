@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hackcorona/constants/firestore_refs.dart';
 import 'package:hackcorona/models/corona_info.dart';
 import 'package:hackcorona/models/status.dart';
+import 'package:hackcorona/screens/info_detail.dart';
 import 'package:hackcorona/services/database_service.dart';
 import 'package:hackcorona/utils/AppLocalization.dart';
 import 'package:hackcorona/utils/colors.dart';
@@ -18,6 +19,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   DatabaseService _service;
   List<CoronaInfo> _symptoms = [];
+  List<CoronaInfo> _prevents = [];
 
   @override
   void initState() {
@@ -25,6 +27,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     _service = DatabaseService(); //TODO: Provide this service with Provider
     _loadSymptoms();
+    _loadPrevents();
   }
 
   ///Load Symptoms
@@ -32,6 +35,14 @@ class _HomeScreenState extends State<HomeScreen> {
     List<CoronaInfo> symptoms = await _service.getCoronaInfoData(symptomsRef);
     setState(() {
       _symptoms = symptoms;
+    });
+  }
+
+  ///Load Prevents
+  _loadPrevents() async {
+    List<CoronaInfo> prevents = await _service.getCoronaInfoData(preventRef);
+    setState(() {
+      _prevents = prevents;
     });
   }
 
@@ -124,7 +135,9 @@ class _HomeScreenState extends State<HomeScreen> {
           tiles.add(
             GridTile(
               child: SymptomCard(
-                onCardClick: () => {},
+                onCardClick: () => Navigator.push(context, MaterialPageRoute(
+                  builder:(_) => CoronaInfoDetail(infoType: AppLocalizations.of(context).translate('Symptoms'),info: symptom,),
+                )),
                 caption: symptom.caption,
                 image: symptom.image,
                 title: symptom.title,
@@ -209,6 +222,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   _buildPrevention() {
+    
+    if(_prevents.length == 0) _prevents.addAll(prevents);
+    
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -227,14 +243,16 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             height: 350.0,
             child: ListView.builder(
-                itemCount: prevents.length,
+                itemCount: _prevents.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (BuildContext context, int index) {
-                  CoronaInfo prevent = prevents[index];
+                  CoronaInfo prevent = _prevents[index];
 
                   if (prevent == null) return SizedBox.shrink();
                   return PreventionCard(
-                    onCardClick: () => {},
+                    onCardClick: () => Navigator.push(context, MaterialPageRoute(
+                      builder:(_) => CoronaInfoDetail(infoType: AppLocalizations.of(context).translate('Prevention'),info: prevent,),
+                    )),
                     title: prevent.title,
                     image: prevent.image,
                     caption: prevent.caption,

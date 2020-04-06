@@ -70,62 +70,67 @@ class PreventionCard extends StatelessWidget {
   final Function onCardClick;
   final double width;
 
-  PreventionCard({
-    Key key,
-    this.title,
-    this.caption,
-    this.image,
-    @required this.onCardClick,
-    this.width = 250.0
-  }) : super(key: key);
+  PreventionCard(
+      {Key key,
+      this.title,
+      this.caption,
+      this.image,
+      @required this.onCardClick,
+      this.width = 250.0})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Container(
-        width: width,
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  height: 200,
-                    child: Helpers.getImage(image, fit: BoxFit.cover)),
-                SizedBox(
-                  height: 20,
-                ),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: AppColors.primary,
-                    fontWeight: FontWeight.w700,
-                    fontSize: 20,
+    return GestureDetector(
+      onTap: onCardClick,
+      child: Card(
+        color: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Container(
+          width: width,
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      height: 200,
+                      child: Hero(
+                          tag: title,
+                          child: Helpers.getImage(image, fit: BoxFit.cover))),
+                  SizedBox(
+                    height: 20,
                   ),
-                  textAlign: TextAlign.center,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Expanded(
-                  child: Text(
-                    caption,
+                  Text(
+                    title,
                     style: TextStyle(
                       color: AppColors.primary,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 20,
                     ),
                     textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Expanded(
+                    child: Text(
+                      caption,
+                      style: TextStyle(
+                        color: AppColors.primary,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              ),
             ),
           ),
         ),
@@ -147,43 +152,47 @@ class SymptomCard extends StatelessWidget {
     this.image,
     @required this.onCardClick,
   }) : super(key: key);
-  
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: AppColors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10.0),
-      ),
-      child: Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Container(
-                    width: 200,
-                    child: Helpers.getImage(image, fit: BoxFit.cover)),
-                SizedBox(
-                  height: 10,
-                ),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      color: AppColors.primary,
-                      fontWeight: FontWeight.w700,
-                      fontSize: 12,
-                    ),
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
+    return GestureDetector(
+      onTap: onCardClick,
+      child: Card(
+        color: AppColors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Container(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                      width: 200,
+                      child: Hero(
+                          tag: title,
+                          child: Helpers.getImage(image, fit: BoxFit.cover))),
+                  SizedBox(
+                    height: 10,
                   ),
-                ),
-                
-              ],
+                  Expanded(
+                    child: Text(
+                      title,
+                      style: TextStyle(
+                        color: AppColors.primary,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

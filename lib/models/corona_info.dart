@@ -31,6 +31,7 @@ class CoronaInfo {
   }
 }
 
+///*********************** Prevents *****************************************///
 var prevents = [
   CoronaInfo(
     id: '0001',
@@ -59,6 +60,7 @@ var prevents = [
   ),
 ];
 
+///*********************** Symptoms *****************************************///
 var symptoms = [
   CoronaInfo(
     id: '0001',
