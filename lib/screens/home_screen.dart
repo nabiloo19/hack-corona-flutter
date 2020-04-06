@@ -4,6 +4,7 @@ import 'package:hackcorona/models/corona_info.dart';
 import 'package:hackcorona/models/status.dart';
 import 'package:hackcorona/screens/info_detail.dart';
 import 'package:hackcorona/services/database_service.dart';
+import 'package:hackcorona/services/firestore_path.dart';
 import 'package:hackcorona/utils/AppLocalization.dart';
 import 'package:hackcorona/utils/colors.dart';
 import 'package:hackcorona/widgets/common/cards.dart';
@@ -76,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   _buildStatus() {
     return StreamBuilder(
-      stream: _service.globalSummaryStatusStream(),
+      stream: _service.globalSummaryStatusStream(FirestorePath.globalInfo()),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           return Container(
