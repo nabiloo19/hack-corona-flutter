@@ -51,7 +51,7 @@ class _CustomExpandedTextState extends State<CustomExpandedText> {
           ),
           GestureDetector(
               onTap: _expand,
-              child: Text(isExpanded ? "Less": "More...", style: TextStyle(fontSize: 12, color: AppColors.grey),))
+              child: Text(isExpanded ? "Less": "More...", style: TextStyle(fontSize: 15, color: AppColors.grey),))
         ],
       ),
     );

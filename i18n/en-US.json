@@ -1,9 +1,12 @@
 {
-  "title": "Corona",
-  "about_corona": "In early 2020, a new virus began generating headlines all over the world because of the unprecedented speed of its transmission. \nFrom its origins in a food market in Wuhan, China, in December 2019 to countries as far-flung as the United States and the Philippines, the virus (officially named SARS-CoV-2) has affected hundreds of thousands, with a rising death toll now over 17,000.",
   "amharic": "Amharic",
-  "english": "English",
+  "about_corona": "In early 2020, a new virus began generating headlines all over the world because of the unprecedented speed of its transmission. \nFrom its origins in a food market in Wuhan, China, in December 2019 to countries as far-flung as the United States and the Philippines, the virus (officially named SARS-CoV-2) has affected hundreds of thousands, with a rising death toll now over 17,000.",
+  "Announcements": "Announcements",
   "choose_lang": "Choose Language",
+  "english": "English",
+  "Less": "Less",
+  "More": "More",
   "Symptoms": "Symptoms",
+  "title": "Corona",
   "Prevention": "Prevention"
 }
