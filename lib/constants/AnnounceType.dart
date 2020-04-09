@@ -1,0 +1,3 @@
+enum AnnounceType{
+  WARNING,INFO,
+}

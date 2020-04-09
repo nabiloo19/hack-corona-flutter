@@ -7,11 +7,28 @@ class Status {
 
   Status({this.id, this.label, this.value});
 
-  factory Status.fromDoc(DocumentSnapshot doc) {
+  factory Status.fromMap(Map<String, dynamic> data, String documentId) {
+    if (data == null) {
+      return null;
+    }
     return Status(
-      id: doc.documentID,
-      label: doc['label'],
-      value: doc['value']
+      id: documentId,
+      label: data['label'],
+      value: data['value'],
     );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'label': label,
+      'value': value,
+    };
+  }
+
+  factory Status.fromDoc(DocumentSnapshot doc) {
+    return Status(id: doc.documentID, label: doc['label'], value: doc['value']);
+  }
+
+  @override
+  String toString() => 'label: $label, value: $value';
 }

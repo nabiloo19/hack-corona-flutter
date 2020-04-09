@@ -8,10 +8,11 @@ import 'package:hackcorona/screens/news_screen.dart';
 import 'package:hackcorona/screens/volunteer_screen.dart';
 import 'package:hackcorona/utils/colors.dart';
 import 'package:hackcorona/utils/logger.dart';
+import 'package:hackcorona/widgets/common/custom_app_bar.dart';
 import 'package:line_icons/line_icons.dart';
 
 class LandingScreen extends StatefulWidget {
-  static const String TAG = "HOME";
+  static const String TAG = "LANDING_SCREEN";
 
   @override
   _LandingScreenState createState() => _LandingScreenState();
@@ -41,12 +42,12 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    Log.log(LandingScreen.TAG, message: "Home Page is Initialized");
     return Scaffold(
-      // appBar: AppBar(
-      //   backgroundColor: AppColors.background,
-      //   elevation: 0.0,
-      // ),
+       appBar: CustomAppBar(
+         title: "Corona",
+         onPressed: () => {},
+         child: Icon(Icons.menu),
+       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Fluttertoast.showToast(msg: 'Messages');
@@ -87,7 +88,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           title: Text(
             "Home",
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.white,fontSize: 12),
           ),
         ),
         BubbleBottomBarItem(
@@ -102,7 +103,7 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
           title: Text(
             "News",
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.white,fontSize: 12),
           ),
         ),
         BubbleBottomBarItem(
@@ -114,25 +115,11 @@ class _LandingScreenState extends State<LandingScreen> {
           activeIcon: Icon(
             LineIcons.bell,
             color: Colors.white,
+            
           ),
           title: Text(
-            "Announce..",
-            style: TextStyle(color: AppColors.white, fontSize: 10),
-          ),
-        ),
-        BubbleBottomBarItem(
-          backgroundColor: AppColors.primary,
-          icon: Icon(
-            LineIcons.hand_pointer_o,
-            color: AppColors.primary,
-          ),
-          activeIcon: Icon(
-            LineIcons.hand_pointer_o,
-            color: Colors.white,
-          ),
-          title: Text(
-            "Volunteer",
-            style: TextStyle(color: AppColors.white, fontSize: 10),
+            "Notification",
+            style: TextStyle(color: AppColors.white, fontSize: 12),
           ),
         ),
       ],
