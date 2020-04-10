@@ -5,7 +5,9 @@
   "choose_lang": "Choose Language",
   "english": "English",
   "Less": "Less",
-  "More": "More",
+  "More": "More...",
+  "News": "News",
+  "FakeAlert": "Fake Alert",
   "Symptoms": "Symptoms",
   "title": "Corona",
   "Prevention": "Prevention"

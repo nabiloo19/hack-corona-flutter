@@ -125,6 +125,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             Center(
               child: CustomExpandedText(
                 text: announce.message == null? '' : announce.message,
+                textAlign: TextAlign.start,
               ),
             ),
             SizedBox(

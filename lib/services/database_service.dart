@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackcorona/constants/firestore_refs.dart';
 import 'package:hackcorona/models/announcement.dart';
 import 'package:hackcorona/models/corona_info.dart';
+import 'package:hackcorona/models/news.dart';
 import 'package:hackcorona/models/status.dart';
 import 'package:hackcorona/services/firestore_path.dart';
 import 'package:hackcorona/services/firestore_service.dart';
@@ -26,9 +27,16 @@ class DatabaseService {
       _service.getQuerySnap(path: path);
 
   ///Get Covid-19 Announcements
-  Stream<List<Announcement>> getCovidAnnouncements(String path, String locale) =>
+  Stream<List<Announcement>> getCovidAnnouncements(
+          String path, String locale) =>
       _service.collectionStream(
           path: path,
           builder: (data, documentId) =>
               Announcement.fromMap(data, documentId, locale: locale));
+
+  ///Get News
+  Stream<List<News>> getNews(String path) => _service.collectionStream(
+        path: path,
+        builder: (data, documentId) => News.fromMap(data, documentId),
+      );
 }

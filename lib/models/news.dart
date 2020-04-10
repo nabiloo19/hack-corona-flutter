@@ -32,5 +32,27 @@ class News {
       image: data['image'],
     );
   }
-
 }
+
+var allNews = [
+  News(
+    date: Timestamp.now(),
+    id: '0001',
+    body:
+        "If keeping your grandparents safe means you can't visit them...talk to them every day so they don't feel alone.\nKeeping each other safe and connected is everyone's responsibility.\nPhysical distancing is not social isolation.",
+    title: "What keeping your grandparents safe means?",
+    likes: 10,
+    views: 200,
+    image: 'assets/images/symptoms/symptoms-shortness-breath.jpg'
+  ),
+  News(
+      date: Timestamp.now(),
+      id: '0001',
+      body:
+      "If keeping your grandparents safe means you can't visit them...talk to them every day so they don't feel alone.\r\n\nKeeping each other safe and connected is everyone's responsibility.\nPhysical distancing is not social isolation.",
+      title: "What keeping your grandparents safe means?",
+      likes: 10,
+      views: 200,
+      image: 'assets/images/symptoms/symptoms-cough.jpg'
+  )
+];
