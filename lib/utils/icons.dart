@@ -13,6 +13,9 @@ class AppIcons {
   static const donate = LineIcons.heart;
   static const help = LineIcons.question_circle;
   static const about = LineIcons.info;
+  static const like = LineIcons.thumbs_up;
+  static const refresh = LineIcons.refresh;
+  static const add = LineIcons.plus;
   
   
 }

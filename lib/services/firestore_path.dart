@@ -13,4 +13,6 @@ class FirestorePath {
 
   static String covidAnnouncements(String locale) =>
       'announcements/covid19/covidAnnouncements';
+
+  static String faq(String locale) => 'question_answer/$locale/faq';
 }

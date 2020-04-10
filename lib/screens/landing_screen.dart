@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hackcorona/providers/AppLangProvider.dart';
 import 'package:hackcorona/screens/announcement_screen.dart';
 import 'package:hackcorona/screens/case_tracking.dart';
 import 'package:hackcorona/screens/home_screen.dart';
@@ -15,15 +16,16 @@ import 'package:hackcorona/utils/icons.dart';
 import 'package:hackcorona/utils/logger.dart';
 import 'package:hackcorona/widgets/common/custom_app_bar.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:provider/provider.dart';
 
 class DrawerMenu {
   final String name;
   final IconData icon;
-  
+
   DrawerMenu({this.name, this.icon});
 }
 
-var  _drawerMenuList = [
+var _drawerMenuList = [
   DrawerMenu(name: 'Home', icon: AppIcons.home),
   DrawerMenu(name: 'CaseTracking', icon: AppIcons.case_track),
   DrawerMenu(name: 'DangerZone', icon: AppIcons.danger_zone),
@@ -34,7 +36,6 @@ var  _drawerMenuList = [
   DrawerMenu(name: 'Help', icon: AppIcons.help),
   DrawerMenu(name: 'About', icon: AppIcons.about),
 ];
-
 
 class LandingScreen extends StatefulWidget {
   static const String TAG = "LANDING_SCREEN";
@@ -65,17 +66,26 @@ class _LandingScreenState extends State<LandingScreen> {
       currentIndex = index;
     });
   }
-  
+
   _handleDrawerMenuClick(String key) {
-    switch(key) {
+    switch (key) {
       case "Home":
         Navigator.pop(context);
         break;
       case "CaseTracking":
-        Navigator.push(context, MaterialPageRoute(builder: (_) => CaseTracking()));
+        Navigator.push(
+            context, MaterialPageRoute(builder: (_) => CaseTracking()));
         break;
       case "QuestionAnswer":
-        Navigator.push(context, MaterialPageRoute(builder: (_) => QuestionAnswerScreen()));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => QuestionAnswerScreen(
+                      locale:
+                          Provider.of<AppLangProvider>(context, listen: false)
+                              .appLocale
+                              .languageCode,
+                    )));
         break;
     }
   }

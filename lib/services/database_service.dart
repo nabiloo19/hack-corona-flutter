@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hackcorona/constants/firestore_refs.dart';
+import 'package:hackcorona/models/QuestionAnswer.dart';
 import 'package:hackcorona/models/announcement.dart';
 import 'package:hackcorona/models/corona_info.dart';
 import 'package:hackcorona/models/news.dart';
@@ -39,4 +40,10 @@ class DatabaseService {
         path: path,
         builder: (data, documentId) => News.fromMap(data, documentId),
       );
+
+  ///Get FAQ
+  Future<List<QuestionAnswer>> getFAQ(String path) => _service.getCollectionData(
+    path: path,
+    builder: (data, documentId) => QuestionAnswer.fromMap(data, documentId),
+  );
 }

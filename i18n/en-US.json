@@ -21,5 +21,9 @@
   "QuestionAnswer": "Question/Answer",
   "Donation": "Donation",
   "Help": "Help",
-  "About": "About"
+  "About": "About",
+  "Questions": "Questions",
+  "Ask": "Ask",
+  "Refresh": "Refresh",
+  "FAQHitLike": "If you like the answer, hit the like button!"
 }
