@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:hackcorona/utils/AppLocalization.dart';
 import 'package:hackcorona/utils/colors.dart';
 import 'package:hackcorona/utils/display.dart';
 
 class CustomExpandedText extends StatefulWidget {
   final String text;
+  final TextAlign textAlign;
   
-  CustomExpandedText({Key key, this.text}):super(key:key);
+  CustomExpandedText({Key key, this.text, this.textAlign=TextAlign.center}):super(key:key);
   
   @override
   _CustomExpandedTextState createState() => _CustomExpandedTextState();
@@ -35,12 +37,12 @@ class _CustomExpandedTextState extends State<CustomExpandedText> {
               widget.text,
               maxLines: 3,
               style: TextStyle(fontSize: 13),
-              textAlign: TextAlign.center,
+              textAlign: widget.textAlign,
             ),
             secondChild: Text(
               widget.text,
               style: TextStyle(fontSize: 13),
-              textAlign: TextAlign.center,
+              textAlign: widget.textAlign,
             ),
             
             crossFadeState: isExpanded?CrossFadeState.showSecond:CrossFadeState.showFirst,
@@ -51,7 +53,7 @@ class _CustomExpandedTextState extends State<CustomExpandedText> {
           ),
           GestureDetector(
               onTap: _expand,
-              child: Text(isExpanded ? "Less": "More...", style: TextStyle(fontSize: 15, color: AppColors.grey),))
+              child: Text(isExpanded ? AppLocalizations.of(context).translate("Less"): AppLocalizations.of(context).translate("More"), style: TextStyle(fontSize: 15, color: AppColors.grey),))
         ],
       ),
     );

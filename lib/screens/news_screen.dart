@@ -1,6 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hackcorona/models/news.dart';
+import 'package:hackcorona/providers/AppLangProvider.dart';
+import 'package:hackcorona/services/database_service.dart';
+import 'package:hackcorona/services/firestore_path.dart';
+import 'package:hackcorona/utils/AppLocalization.dart';
 import 'package:hackcorona/utils/colors.dart';
+import 'package:hackcorona/utils/helpers.dart';
+import 'package:hackcorona/widgets/common/expanded_text.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class NewsScreen extends StatefulWidget {
   @override
@@ -9,13 +19,13 @@ class NewsScreen extends StatefulWidget {
 
 class _NewsScreenState extends State<NewsScreen> {
   List<dynamic> newsList;
+  List<News> _newsList = [];
+  DatabaseService _service;
 
   @override
   void initState() {
     super.initState();
-    newsList = List<dynamic>.generate(10, (index) {
-      return _buildNewsTab();
-    });
+    _service = new DatabaseService();
   }
 
   @override
@@ -30,8 +40,10 @@ class _NewsScreenState extends State<NewsScreen> {
                 labelColor: AppColors.primary,
                 indicatorColor: AppColors.primary,
                 tabs: [
-                  Tab(text: "News"),
-                  Tab(text: "Fake News"),
+                  Tab(text: AppLocalizations.of(context).translate("News")),
+                  Tab(
+                      text:
+                          AppLocalizations.of(context).translate("FakeAlert")),
                 ]),
           ),
           Expanded(
@@ -54,87 +66,259 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildNewsTab() {
-    return CustomScrollView(
-      slivers: <Widget>[
-        SliverList(
-          delegate: SliverChildListDelegate([
-            SizedBox(
-              height: 20,
-            ),
-            Card(
-              clipBehavior: Clip.antiAliasWithSaveLayer,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20.0),
-              ),
+    return StreamBuilder(
+        stream: _service.getNews(
+          FirestorePath.news(
+              Provider.of<AppLangProvider>(context).appLocale.languageCode),
+        ),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return Center(
+              child: Text('No Data Yet!'),
+            );
+          }
+
+          if (snap.hasError) {
+            return Center(
+              child: Text('ERROR! Unable to fetch data'),
+            );
+          }
+
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return _buildNewsCard(snap.data[index]);
+                },
+                childCount: snap.data.length,
+              ))
+            ],
+          );
+        });
+  }
+
+  _buildNewsCard(News news) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Card(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 20),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 18, vertical: 20),
-                    child: Column(
-                      children: <Widget>[
-                        Text(
-                          'Lorem ipsum delor eust sard magna diama solor',
-                          style: TextStyle(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Row(
-                              children: <Widget>[
-                                Icon(LineIcons.calendar),
-                                Text('30-03-2020'),
-                              ],
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Icon(LineIcons.eye),
-                                Text('234,304'),
-                              ],
-                            ),
-                            Row(
-                              children: <Widget>[
-                                Icon(LineIcons.thumbs_up),
-                                Text('321'),
-                              ],
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 15,
-                        ),
-                        Text(
-                            'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation.'),
-                      ],
+                  Text(
+                    news.title,
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
                     ),
                   ),
-                  Image.network(
-                    'https://picsum.photos/seed/picsum/200',
-                    fit: BoxFit.fitWidth,
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.calendar),
+                          Text(
+                            DateFormat.yMMMEd().format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  news.date.millisecondsSinceEpoch),
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.eye),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(news.views.toString()),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.thumbs_up),
+                          Text(news.likes.toString()),
+                        ],
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                          "[${AppLocalizations.of(context).translate("Source")}]: "),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(news.source)
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  CustomExpandedText(
+                    text: news.body,
+                    textAlign: TextAlign.start,
                   )
                 ],
               ),
             ),
-          ]),
-        )
-      ],
+            Helpers.getImage(news.image, fit: BoxFit.fitWidth),
+          ],
+        ),
+      ),
     );
   }
 
   _buildFakeNewsTab() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[Text('Fake News')],
+    return StreamBuilder(
+        stream: _service.getNews(
+          FirestorePath.fakeNews(
+              Provider.of<AppLangProvider>(context).appLocale.languageCode),
+        ),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return Center(
+              child: Text('No Data Yet!'),
+            );
+          }
+
+          if (snap.hasError) {
+            return Center(
+              child: Text('ERROR! Unable to fetch data'),
+            );
+          }
+
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return _buildFakeAlertCard(snap.data[index]);
+                },
+                childCount: snap.data.length,
+              ))
+            ],
+          );
+        });
+  }
+
+  _buildFakeAlertCard(News news) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Card(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context).translate("Fake"),
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    news.title,
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.calendar),
+                          Text(
+                            DateFormat.yMMMEd().format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  news.date.millisecondsSinceEpoch),
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.eye),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(news.views.toString()),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                          "[${AppLocalizations.of(context).translate("Source")}]: "),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(news.source)
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  CustomExpandedText(
+                    text: news.body,
+                    textAlign: TextAlign.start,
+                  )
+                ],
+              ),
+            ),
+            Helpers.getImage(news.image, fit: BoxFit.fitWidth),
+          ],
+        ),
       ),
     );
   }
