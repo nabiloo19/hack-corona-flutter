@@ -12,5 +12,14 @@
   "Symptoms": "Symptoms",
   "Source": "Source",
   "title": "Corona",
-  "Prevention": "Prevention"
+  "Prevention": "Prevention",
+  "Home": "Home",
+  "CaseTracking": "Case Tracking",
+  "DangerZone": "Danger Zone",
+  "SelfCheckup": "Self Checkup",
+  "Volunteerism": "Volunteerism",
+  "QuestionAnswer": "Question/Answer",
+  "Donation": "Donation",
+  "Help": "Help",
+  "About": "About"
 }
