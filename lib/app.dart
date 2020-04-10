@@ -24,7 +24,6 @@ class CoronaApp extends StatelessWidget {
       child: Consumer<AppLangProvider>(
         builder: (context, model, child) {
           ///Update Easy Localization's preference
-          Log.log("APP", message: 'Current Locale = ${model.appLocale}');
           return MaterialApp(
             
             localizationsDelegates: [

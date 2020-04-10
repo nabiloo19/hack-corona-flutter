@@ -26,9 +26,9 @@ class DatabaseService {
       _service.getQuerySnap(path: path);
 
   ///Get Covid-19 Announcements
-  Stream<List<Announcement>> getCovidAnnouncements(String path) =>
+  Stream<List<Announcement>> getCovidAnnouncements(String path, String locale) =>
       _service.collectionStream(
           path: path,
           builder: (data, documentId) =>
-              Announcement.fromMap(data, documentId));
+              Announcement.fromMap(data, documentId, locale: locale));
 }

@@ -12,12 +12,11 @@ class Announcement {
 
   Announcement({this.id, this.message, this.source, this.isTop, this.date, this.type, this.reference});
   
-  factory Announcement.fromMap(Map<String, dynamic> data, String documentId) {
+  factory Announcement.fromMap(Map<String, dynamic> data, String documentId, {String locale = 'en'}) {
     if(data == null) return null;
-    
     return Announcement(
       id: documentId,
-      message: data['message'],
+      message: locale == 'en'? data['message']:data['message_$locale'],
       reference: data['reference'],
       source: data['source'],
       isTop: data['isTop'],

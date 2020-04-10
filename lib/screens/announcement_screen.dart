@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hackcorona/constants/AnnounceType.dart';
 import 'package:hackcorona/models/announcement.dart';
+import 'package:hackcorona/providers/AppLangProvider.dart';
 import 'package:hackcorona/services/database_service.dart';
 import 'package:hackcorona/services/firestore_path.dart';
 import 'package:hackcorona/utils/AppLocalization.dart';
@@ -8,6 +9,7 @@ import 'package:hackcorona/utils/colors.dart';
 import 'package:hackcorona/utils/logger.dart';
 import 'package:hackcorona/widgets/common/expanded_text.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AnnouncementScreen extends StatefulWidget {
   static final String TAG = "Announcement";
@@ -55,10 +57,10 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
 
   /// Top Announcements
   _buildTopAnnouncements() {
-   
+    var locale = Provider.of<AppLangProvider>(context, listen: false).appLocale.languageCode;
     return StreamBuilder(
       stream: _service.getCovidAnnouncements(
-        FirestorePath.covidAnnouncements('en'),
+        FirestorePath.covidAnnouncements('en'),locale
       ),
       builder: (context, snap) {
         if (!snap.hasData) {
@@ -122,7 +124,7 @@ class _AnnouncementScreenState extends State<AnnouncementScreen> {
             ),
             Center(
               child: CustomExpandedText(
-                text: announce.message,
+                text: announce.message == null? '' : announce.message,
               ),
             ),
             SizedBox(
