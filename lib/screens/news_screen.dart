@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hackcorona/models/news.dart';
 import 'package:hackcorona/providers/AppLangProvider.dart';
@@ -25,7 +26,6 @@ class _NewsScreenState extends State<NewsScreen> {
   void initState() {
     super.initState();
     _service = new DatabaseService();
-
   }
 
   @override
@@ -67,37 +67,35 @@ class _NewsScreenState extends State<NewsScreen> {
 
   _buildNewsTab() {
     return StreamBuilder(
-      stream: _service.getNews(
-        FirestorePath.news(
-            Provider.of<AppLangProvider>(context).appLocale.languageCode),
-      ),
-      builder: (context, snap) {
-  
-        if (!snap.hasData) {
-          return Center(
-            child: Text('No Data Yet!'),
+        stream: _service.getNews(
+          FirestorePath.news(
+              Provider.of<AppLangProvider>(context).appLocale.languageCode),
+        ),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return Center(
+              child: Text('No Data Yet!'),
+            );
+          }
+
+          if (snap.hasError) {
+            return Center(
+              child: Text('ERROR! Unable to fetch data'),
+            );
+          }
+
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return _buildNewsCard(snap.data[index]);
+                },
+                childCount: snap.data.length,
+              ))
+            ],
           );
-        }
-  
-        if(snap.hasError) {
-          return Center(
-            child: Text('ERROR! Unable to fetch data'),
-          );
-        }
-        
-        return CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-                delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                    return _buildNewsCard(snap.data[index]);
-                  },
-                  childCount: snap.data.length,
-                ))
-          ],
-        );
-      }
-    );
+        });
   }
 
   _buildNewsCard(News news) {
@@ -136,8 +134,10 @@ class _NewsScreenState extends State<NewsScreen> {
                           Icon(LineIcons.calendar),
                           Text(
                             DateFormat.yMMMEd().format(
-                                DateTime.fromMillisecondsSinceEpoch(
-                                    news.date.millisecondsSinceEpoch)),
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  news.date.millisecondsSinceEpoch),
+                            ),
+                            style: TextStyle(fontSize: 13),
                           ),
                         ],
                       ),
@@ -161,6 +161,19 @@ class _NewsScreenState extends State<NewsScreen> {
                   SizedBox(
                     height: 15,
                   ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                          "[${AppLocalizations.of(context).translate("Source")}]: "),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(news.source)
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   CustomExpandedText(
                     text: news.body,
                     textAlign: TextAlign.start,
@@ -176,11 +189,136 @@ class _NewsScreenState extends State<NewsScreen> {
   }
 
   _buildFakeNewsTab() {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[Text('Fake News')],
+    return StreamBuilder(
+        stream: _service.getNews(
+          FirestorePath.fakeNews(
+              Provider.of<AppLangProvider>(context).appLocale.languageCode),
+        ),
+        builder: (context, snap) {
+          if (!snap.hasData) {
+            return Center(
+              child: Text('No Data Yet!'),
+            );
+          }
+
+          if (snap.hasError) {
+            return Center(
+              child: Text('ERROR! Unable to fetch data'),
+            );
+          }
+
+          return CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return _buildFakeAlertCard(snap.data[index]);
+                },
+                childCount: snap.data.length,
+              ))
+            ],
+          );
+        });
+  }
+
+  _buildFakeAlertCard(News news) {
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: 10),
+      child: Card(
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 18, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20)
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context).translate("Fake"),
+                      style: TextStyle(
+                        color: AppColors.white,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Text(
+                    news.title,
+                    style: TextStyle(
+                      color: AppColors.primary,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.calendar),
+                          Text(
+                            DateFormat.yMMMEd().format(
+                              DateTime.fromMillisecondsSinceEpoch(
+                                  news.date.millisecondsSinceEpoch),
+                            ),
+                            style: TextStyle(fontSize: 13),
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: <Widget>[
+                          Icon(LineIcons.eye),
+                          SizedBox(
+                            width: 3,
+                          ),
+                          Text(news.views.toString()),
+                        ],
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    children: <Widget>[
+                      Text(
+                          "[${AppLocalizations.of(context).translate("Source")}]: "),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Text(news.source)
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  CustomExpandedText(
+                    text: news.body,
+                    textAlign: TextAlign.start,
+                  )
+                ],
+              ),
+            ),
+            Helpers.getImage(news.image, fit: BoxFit.fitWidth),
+          ],
+        ),
       ),
     );
   }

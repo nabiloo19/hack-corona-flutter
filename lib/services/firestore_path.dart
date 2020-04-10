@@ -6,6 +6,7 @@ class FirestorePath {
   static String prevents(String locale) => 'info/$locale/prevents';
 
   static String news(String locale) => 'news/$locale/all_news';
+  static String fakeNews(String locale) => 'news/$locale/fake_news';
 
   static String newsDoc(String locale, String newsId) =>
       'news/$locale/all_news/$newsId';
