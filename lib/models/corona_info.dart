@@ -65,6 +65,19 @@ var prevents = [
     description:
         'Cover your mouth and nose with a tissue when you cough or sneeze or use the inside of your elbow. Throw used tissues in the trash.Immediately wash your hands with soap and water for at least 20 seconds. If soap and water are not readily available, clean your hands with a hand sanitizer that contains at least 60% alcohol.',
   ),
+
+  // CoronaInfo(
+  //   id: '0005',
+  //   image: 'assets/images/symptoms/symptoms-DO-five.gif',
+  //   title: 'STAY HOME. SAVE LIVES.',
+  //   caption: 'Help stop coronavirus',
+  //   description:
+  //       '1. STAYhome as much as you can'
+  //       '2. KEEPa safe distance'
+  //       '3. WASHhands often'
+  //       '4. COVERyour cough'
+  //       '5. SICK?Call ahead',
+  // ),
 ];
 
 ///*********************** Symptoms *****************************************///
